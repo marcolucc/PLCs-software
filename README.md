@@ -11,7 +11,6 @@ To run the Docker projects in this repository, you will need to have Docker inst
 
 The MicroLogix-1100 Docker project can be found in the `micrologix-1100` directory. To run it, navigate to the directory and run the following command:
 
-shCopy code
 
 `docker build -t micrologix-1100 .
 docker run -p 80:80 -p 502:502 -p 6668:6668 -d micrologix-1100` 
@@ -22,7 +21,6 @@ This will build the Docker image and start the container, making it available on
 
 The S7-300 Docker project can be found in the `s7-300` directory. To run it, navigate to the directory and run the following command:
 
-shCopy code
 
 `docker build -t s7-300 .
 docker run -p 80:80 -p 502:502 -p 6668:6668  -d s7-300` 
@@ -33,7 +31,6 @@ This will build the Docker image and start the container, making it available on
 
 The S7-1200 Docker project can be found in the `s7-1200` directory. To run it, navigate to the directory and run the following command:
 
-shCopy code
 
 `docker build -t s7-1200 .
 docker run -p 80:80 -p 502:502 -p 6668:6668  -d s7-1200` 
