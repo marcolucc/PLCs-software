@@ -2,21 +2,24 @@ FROM ubuntu:18.04
 
 USER root
 WORKDIR /root/
-RUN apt-get update && \
-    apt-get -y install lighttpd git python-pip autoconf bison build-essential pkg-config bison flex autoconf automake libtool make git python2.7 python-pip sqlite3 cmake sudo
+RUN apt-get update 
+RUN apt-get update --fix-missing
+RUN apt-get -y install lighttpd git python-pip 
+RUN apt-get -y install autoconf bison build-essential 
+RUN apt-get -y install pkg-config bison flex autoconf 
+RUN apt-get -y install automake libtool make git 
+RUN apt-get -y install python2.7 python-pip sqlite3 cmake sudo
 RUN pip install flask flask-login pyserial pymodbus
 
 # Install dependencies
-RUN apt-get update \
-  && apt-get install -y wget gcc make openssl libffi-dev libgdbm-dev libsqlite3-dev libssl-dev zlib1g-dev \
+RUN apt-get install -y wget gcc make openssl libffi-dev libgdbm-dev libsqlite3-dev libssl-dev zlib1g-dev \
   && apt-get clean
 
 
 WORKDIR /home/
 
-RUN apt-get update 
 RUN apt-get install -y git libevent-dev libdumbnet-dev libpcap-dev libpcre3-dev libedit-dev bison flex libtool automake git zlib1g-dev make
-RUN git clone https://github.com/marcolucc/Honeyd.git && git clone https://github.com/SCADACS/snap7.git
+RUN git clone https://github.com/marcolucc/Honeyd.git && git clone https://github.com/sefcom/honeyplc.git
 WORKDIR Honeyd
 
 RUN mv configure.in configure.ac
@@ -32,7 +35,7 @@ WORKDIR /app
 ADD honeyd.conf /app/honeyd.conf
 
 # Set the script as the command to run when the container starts
-RUN chmod +x signatures.sh && ./signatures.sh
+#RUN chmod +x signatures.sh && ./signatures.sh
 
 WORKDIR /home/
 
@@ -60,6 +63,7 @@ EXPOSE 47
 EXPOSE 67
 EXPOSE 68
 EXPOSE 80
+EXPOSE 102
 
 CMD nohup lighttpd -D -f /etc/lighttpd/lighttpd.conf &> httpd.log; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; sh /home/OpenPLC_v3/run.sh
 #CMD sh /home/OpenPLC_v3/launch.sh
