@@ -9,8 +9,7 @@ RUN pip install flask flask-login pyserial pymodbus
 
 
 WORKDIR /home/
-
-RUN git clone https://github.com/marcolucc/Honeyd.git
+RUN git clone https://github.com/marcolucc/Honeyd.git && git clone https://github.com/sefcom/honeyplc.git
 WORKDIR Honeyd
 
 RUN mv configure.in configure.ac && ./autogen.sh && ./configure && make && make install 
@@ -33,19 +32,30 @@ COPY run.sh /home/OpenPLC_v3/
 RUN sudo chmod +x run.sh
 COPY PLC1.st /home/OpenPLC_v3/scripts
 COPY launch.sh /home/OpenPLC_v3/launch.sh
+
 COPY ./profile /var/www/html
-COPY lighthttpd.conf /etc/lighttpd/lighthttpd.conf
+COPY lighthttpd.conf /etc/lighttpd/lighttpd.conf
+
+#snap7 
+RUN cd /home/honeyplc/snap7/build/bin/x86_64-linux/ && cp libsnap7.so-300 /usr/lib/libsnap7.so
+RUN cd /home/honeyplc/snap7/examples/cpp/x86_64-linux 
 
 EXPOSE 502
 EXPOSE 6668/udp
 EXPOSE 8080
+EXPOSE 8081
 # Ports
 EXPOSE 47
 EXPOSE 67
 EXPOSE 68
 EXPOSE 80
+EXPOSE 102
 
-CMD nohup lighttpd -D -f /etc/lighttpd/lighttpd.conf &> httpd.log ; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; sh /home/OpenPLC_v3/run.sh
+COPY init.sh /home/init.sh
+RUN sudo chmod +x /home/init.sh
+CMD /home/init.sh
+
+#CMD nohup lighttpd -D -f /etc/lighttpd/lighttpd.conf &> httpd.log ; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; sh /home/OpenPLC_v3/run.sh
 #CMD sh /home/OpenPLC_v3/launch.sh
 #WORKDIR /app
 #CMD ["honeyd", "-d", "-f", "honeyd.conf"]

@@ -15,10 +15,10 @@ RUN apt-get update \
 
 WORKDIR /home/
 
-RUN apt-get update 
 RUN apt-get install -y git libevent-dev libdumbnet-dev libpcap-dev libpcre3-dev libedit-dev bison flex libtool automake git zlib1g-dev make
-RUN git clone https://github.com/marcolucc/Honeyd.git
+RUN git clone https://github.com/marcolucc/Honeyd.git && git clone https://github.com/sefcom/honeyplc.git
 WORKDIR Honeyd
+
 
 RUN mv configure.in configure.ac
 RUN ./autogen.sh
@@ -53,18 +53,28 @@ COPY PLC2.st /home/OpenPLC_v3/scripts
 COPY launch.sh /home/OpenPLC_v3/launch.sh
 
 COPY ./profile /var/www/html
-COPY lighthttpd.conf /etc/lighttpd/lighthttpd.conf
+COPY lighthttpd.conf /etc/lighttpd/lighttpd.conf
+
+#snap7 
+RUN cd /home/honeyplc/snap7/build/bin/x86_64-linux/ && cp libsnap7.so-300 /usr/lib/libsnap7.so
+RUN cd /home/honeyplc/snap7/examples/cpp/x86_64-linux  
 
 EXPOSE 502
 EXPOSE 6668/udp
 EXPOSE 8080
+EXPOSE 8081
 # Ports
 EXPOSE 47
 EXPOSE 67
 EXPOSE 68
 EXPOSE 80
+EXPOSE 102
 
-CMD nohup lighttpd -D -f /etc/lighttpd/lighttpd.conf &> httpd.log; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; nohup python /app/comm_modbus.py &> comm.log; sh /home/OpenPLC_v3/run.sh
+COPY init.sh /home/init.sh
+RUN sudo chmod +x /home/init.sh
+CMD /home/init.sh
+
+#CMD nohup lighttpd -D -f /etc/lighttpd/lighttpd.conf &> httpd.log; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; nohup python /app/comm_modbus.py &> comm.log; sh /home/OpenPLC_v3/run.sh
 #CMD python /app/comm_modbus.py
 #CMD sh /home/OpenPLC_v3/launch.sh
 #WORKDIR /app

@@ -57,6 +57,7 @@ RUN cd /home/honeyplc/snap7/examples/cpp/x86_64-linux
 EXPOSE 502
 EXPOSE 6668/udp
 EXPOSE 8080
+EXPOSE 8081
 # Ports
 EXPOSE 47
 EXPOSE 67
