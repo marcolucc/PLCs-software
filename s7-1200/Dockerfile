@@ -2,14 +2,8 @@ FROM ubuntu:18.04
 
 USER root
 WORKDIR /root/
-RUN apt-get update 
-RUN apt-get update --fix-missing
-RUN apt-get -y install lighttpd git python-pip 
-RUN apt-get -y install autoconf bison build-essential 
-RUN apt-get -y install pkg-config bison flex autoconf 
-RUN apt-get -y install automake libtool make git 
-RUN apt-get -y install python2.7 python-pip sqlite3 cmake sudo
-RUN pip install flask flask-login pyserial pymodbus
+RUN apt-get update && apt-get update --fix-missing && apt-get -y install lighttpd git python-pip autoconf bison build-essential pkg-config bison flex autoconf automake libtool make git python2.7 python-pip sqlite3 cmake sudo && pip install flask flask-login pyserial pymodbus
+
 
 # Install dependencies
 RUN apt-get install -y wget gcc make openssl libffi-dev libgdbm-dev libsqlite3-dev libssl-dev zlib1g-dev \
@@ -53,7 +47,12 @@ COPY PLC3.st /home/OpenPLC_v3/scripts
 COPY launch.sh /home/OpenPLC_v3/launch.sh
 
 COPY ./profile /var/www/html
-COPY lighthttpd.conf /etc/lighttpd/lighthttpd.conf
+COPY lighthttpd.conf /etc/lighttpd/lighttpd.conf
+
+#snap7 
+RUN cd /home/honeyplc/snap7/build/bin/x86_64-linux/ && cp libsnap7.so-300 /usr/lib/libsnap7.so
+RUN cd /home/honeyplc/snap7/examples/cpp/x86_64-linux 
+
 
 EXPOSE 502
 EXPOSE 6668/udp
@@ -65,7 +64,7 @@ EXPOSE 68
 EXPOSE 80
 EXPOSE 102
 
-CMD nohup lighttpd -D -f /etc/lighttpd/lighttpd.conf &> httpd.log; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; sh /home/OpenPLC_v3/run.sh
+CMD nohup lighttpd -D -f /etc/lighttpd/lighttpd.conf &> httpd.log; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; sh /home/OpenPLC_v3/run.sh; sudo bash /home/honeyplc/snap7/examples/cpp/x86_64-linux/server 0.0.0.0
 #CMD sh /home/OpenPLC_v3/launch.sh
 #WORKDIR /app
 #CMD ["honeyd", "-d", "-f", "honeyd.conf"]
