@@ -37,8 +37,6 @@ COPY ./profile /var/www/html
 COPY lighthttpd.conf /etc/lighttpd/lighttpd.conf
 
 #snap7 
-RUN cd /home/honeyplc/snap7/build/bin/x86_64-linux/ && cp libsnap7.so-300 /usr/lib/libsnap7.so
-RUN cd /home/honeyplc/snap7/examples/cpp/x86_64-linux 
 
 EXPOSE 502
 EXPOSE 6668/udp
@@ -49,7 +47,6 @@ EXPOSE 47
 EXPOSE 67
 EXPOSE 68
 EXPOSE 80
-EXPOSE 102
 
 COPY init.sh /home/init.sh
 RUN sudo chmod +x /home/init.sh

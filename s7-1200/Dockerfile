@@ -50,7 +50,7 @@ COPY ./profile /var/www/html
 COPY lighthttpd.conf /etc/lighttpd/lighttpd.conf
 
 #snap7 
-RUN cd /home/honeyplc/snap7/build/bin/x86_64-linux/ && cp libsnap7.so-300 /usr/lib/libsnap7.so
+RUN cd /home/honeyplc/snap7/build/bin/x86_64-linux/ && cp libsnap7.so-1200 /usr/lib/libsnap7.so
 RUN cd /home/honeyplc/snap7/examples/cpp/x86_64-linux 
 
 
