@@ -37,6 +37,10 @@ docker run -p 80:80 -p 502:502 -p 6668:6668  -d s7-1200`
 
 This will build the Docker image and start the container, making it available on port 80. You can access the static HTML page by navigating to `http://localhost` in your web browser.
 
+## How to run Snap7
+`
+sudo bash /home/honeyplc/snap7/examples/cpp/x86_64-linux/server 0.0.0.0 
+`
 ## Modbus Configuration
 
 All three Docker projects are configured to talk to each other using Modbus. The configuration files can be found in the respective project directories.
