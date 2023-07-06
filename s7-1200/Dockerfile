@@ -12,8 +12,23 @@ RUN apt-get install -y wget gcc make openssl libffi-dev libgdbm-dev libsqlite3-d
 
 WORKDIR /home/
 
-RUN apt-get install -y git libevent-dev libdumbnet-dev libpcap-dev libpcre3-dev libedit-dev bison flex libtool automake git zlib1g-dev make
+
+RUN apt-get install -y python3.7 nano vim software-properties-common git libevent-dev libdumbnet-dev libpcap-dev libpcre3-dev libedit-dev bison flex libtool automake git zlib1g-dev make
 RUN git clone https://github.com/marcolucc/Honeyd.git && git clone https://github.com/sefcom/honeyplc.git
+RUN add-apt-repository ppa:deadsnakes/ppa
+
+
+RUN echo "alias python=python3.7" >> ~/.bashrc
+RUN export PATH=${PATH}:/usr/bin/python3.7
+RUN /bin/bash -c "source ~/.bashrc"
+
+# Install pip
+RUN apt install python3-pip -y
+RUN python3 -m pip install --upgrade pip
+RUN pip install snmpsim==0.4.7 pyasn1==0.4.8
+
+COPY ./data /data
+
 WORKDIR Honeyd
 
 RUN mv configure.in configure.ac
@@ -64,11 +79,12 @@ EXPOSE 67
 EXPOSE 68
 EXPOSE 80
 EXPOSE 102
-
+EXPOSE 161
+RUN useradd -ms /bin/bash newuser
 COPY init.sh /home/init.sh
 RUN sudo chmod +x /home/init.sh
 CMD /home/init.sh
-
+#CMD tail -f /dev/null
 #CMD nohup lighttpd -D -f /etc/lighttpd/lighttpd.conf &> httpd.log; nohup honeyd -d -f /app/honeyd.conf &> honeyd.log; sh /home/OpenPLC_v3/run.sh; sudo bash /home/honeyplc/snap7/examples/cpp/x86_64-linux/server 0.0.0.0
 #CMD sh /home/OpenPLC_v3/launch.sh
 #WORKDIR /app
