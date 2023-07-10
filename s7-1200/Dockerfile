@@ -28,15 +28,7 @@ RUN python3 -m pip install --upgrade pip
 RUN pip install snmpsim==0.4.7 pyasn1==0.4.8
 
 COPY ./data /data
-
-WORKDIR Honeyd
-
-RUN mv configure.in configure.ac
-RUN ./autogen.sh
-RUN ./configure
-
-RUN make 
-RUN make install 
+ 
 
 # Copy the script to the image
 COPY signatures.sh /app/signatures.sh
