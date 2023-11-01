@@ -17,6 +17,12 @@ RUN apt-get install -y python3.7 nano vim software-properties-common git libeven
 RUN git clone https://github.com/marcolucc/Honeyd.git && git clone https://github.com/sefcom/honeyplc.git
 RUN add-apt-repository ppa:deadsnakes/ppa
 
+WORKDIR Honeyd
+RUN mv configure.in configure.ac
+RUN ./autogen.sh
+RUN ./configure
+RUN make 
+RUN make install 
 
 RUN echo "alias python=python3.7" >> ~/.bashrc
 RUN export PATH=${PATH}:/usr/bin/python3.7
